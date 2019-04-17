@@ -909,12 +909,14 @@ def test_trend_normalising():
 #-------------------------------------------------------------------
 if __name__ == "__main__":
 
-    print("\n%s Started" % datetime.now().strftime("%H:%M:%S"))
+
+    print("\n%s Started  __path__ [%s] __package__ [%s]  "
+          % (datetime.now().strftime("%H:%M:%S"), __path__, __package__))
     start_time = time.time()  # Start the clock
 
 
     #test_scaling_inverting()
-    test_trend_normalising()
+    #test_trend_normalising()
 
     #unittest.main()
 
