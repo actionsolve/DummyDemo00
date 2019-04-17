@@ -909,7 +909,6 @@ def test_trend_normalising():
 #-------------------------------------------------------------------
 if __name__ == "__main__":
 
-
     #print("\n%s Started  __path__ [%s] __package__ [%s]  " % (datetime.now().strftime("%H:%M:%S"), __path__, __package__))
     print("\n%s Started  dataframe_tools  " % (datetime.now().strftime("%H:%M:%S")))
     start_time = time.time()  # Start the clock
