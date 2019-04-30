@@ -259,7 +259,9 @@ class L10_keras_nn():
 
 
     # -------------------------------------------------------------------
-    def train(self, df_train_x, df_train_y, df_train_M1, validation_split=0.0, verbose=True):
+    def train(self, df_train_x, df_train_y, df_train_M1
+              , df_valid_x=None, df_valid_y=None
+              , verbose=True):
 
         if(verbose):
             print("    Training - df_train_x (%d x %d), df_train_y (%d x %d), df_train_M1 (%d x %d)"
@@ -280,10 +282,18 @@ class L10_keras_nn():
         # Lower batch size reduces error, but takes longer
         # x_train and y_train are Numpy arrays, just like in the Scikit-Learn API.
         data_train_x = df_train_x.values  ; data_train_y = df_train_y.values
-        history = self.__model.fit(data_train_x, data_train_y
-                       #, validation_data=(data_valid_x, data_valid_y)
-                       #, epochs=self._epochs, batch_size=self._batch_size, validation_split=0.33, verbose=False)
-                       , epochs=self.__num_epochs, batch_size=self.__batch_size, verbose=False)
+        if(df_valid_x is not None and df_valid_y is not None):
+            data_valid_x = df_valid_x.values  ; data_valid_y = df_valid_y.values
+            history = self.__model.fit(data_train_x, data_train_y
+                           , validation_data=(data_valid_x, data_valid_y)
+                           #, epochs=self._epochs, batch_size=self._batch_size, validation_split=0.33, verbose=False)
+                           , epochs=self.__num_epochs, batch_size=self.__batch_size, verbose=False)
+        else:
+            history = self.__model.fit(data_train_x, data_train_y
+                           #, validation_data=(data_valid_x, data_valid_y)
+                           #, epochs=self._epochs, batch_size=self._batch_size, validation_split=0.33, verbose=False)
+                           , epochs=self.__num_epochs, batch_size=self.__batch_size, verbose=False)
+
 
         return history
 
@@ -554,7 +564,7 @@ class MyTest(unittest.TestCase):
         print('tearDown()')
 
 
-    def xtest_train_forecast_xor_3ch(self):
+    def test_train_forecast_xor_3ch(self):
 
         '''
         Simple train and predict of XOR function + 3rd noisy input
@@ -582,9 +592,10 @@ class MyTest(unittest.TestCase):
                 , num_training_frames, num_epochs, batch_size, True)
 
         # Train
-        history = learner.train(df_train_x, df_train_y, df_train_x, True)
+        history = learner.train(df_train_x, df_train_y, df_train_x
+                    , df_valid_x=df_train_x, df_valid_y=df_train_y, verbose=True)
         # Plot training history
-        #plot_history(history)
+        plot_history(history)
 
         # Get test data
         # XXX VERY BAD practice to reuse training data
@@ -612,7 +623,7 @@ class MyTest(unittest.TestCase):
 
 
 
-    def test_train_forecast_30ch(self):
+    def xtest_train_forecast_30ch(self):
 
         '''
         Test train and predict of timeseries data, unscaled, ~30 channels
