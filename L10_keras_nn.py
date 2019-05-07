@@ -44,8 +44,8 @@ import tensorflow as tf
 
 
 #sys.path.append('../..')
-#import support.channel_tools as channel_tools
-#import support.plotting_tools as plot_tools
+##import support.channel_tools as channel_tools
+##import support.plotting_tools as plot_tools
 #import support.dataframe_tools as dataframe_tools
 #import support.time_tools as time_tools
 
@@ -471,23 +471,25 @@ def plot_history(history):
 
     # Calc num epochs  (needed?)
     epochs = range(1, len(history.history[loss_list[0]]) + 1)
+    num_plots = len(loss_list) + len(val_loss_list) + len(acc_list) + len(val_acc_list)
+    print('num_plots: %d' % num_plots)
 
-    # Loss
-    plt.figure(1)
+    #fig, (ax1, ax2) = plt.subplots(1, num_plots, figsize=(8, 3), gridspec_kw={'width_ratios': [3, 2]})
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 3))
     for l in loss_list:
-        plt.plot(epochs, history.history[l], 'b', label='Training loss (' + str(str(format(history.history[l][-1],'.5f'))+')'))
+        ax1.plot(epochs, history.history[l], 'b', label='Training loss (' + str(str(format(history.history[l][-1],'.5f'))+')'))
     for l in val_loss_list:
-        plt.plot(epochs, history.history[l], 'g', label='Validation loss (' + str(str(format(history.history[l][-1],'.5f'))+')'))
-    plt.title('Loss')  ;   plt.xlabel('Epochs')  ;  plt.ylabel('Loss')  ;     plt.legend()
+        ax1.plot(epochs, history.history[l], 'g', label='Validation loss (' + str(str(format(history.history[l][-1],'.5f'))+')'))
+    ax1.set_title('Loss'); ax1.set_xlabel('Epochs'); ax1.set_ylabel('Loss');  ax1.grid();  ax1.legend()
 
     # Accuracy
-    plt.figure(2)
     for l in acc_list:
-        plt.plot(epochs, history.history[l], 'b', label='Training accuracy (' + str(format(history.history[l][-1],'.5f'))+')')
+        ax2.plot(epochs, history.history[l], 'b', label='Training accuracy (' + str(format(history.history[l][-1],'.5f'))+')')
     for l in val_acc_list:
-        plt.plot(epochs, history.history[l], 'g', label='Validation accuracy (' + str(format(history.history[l][-1],'.5f'))+')')
-    plt.title('Accuracy')  ;   plt.xlabel('Epochs')  ;  plt.ylabel('Accuracy') ;     plt.legend()
+        ax2.plot(epochs, history.history[l], 'g', label='Validation accuracy (' + str(format(history.history[l][-1],'.5f'))+')')
+    ax2.set_title('Accuracy');  ax2.set_xlabel('Epochs');  ax2.set_ylabel('Accuracy');  ax2.grid(); ax2.legend()
 
+    plt.tight_layout(pad=0.5);
     plt.show()
 
 
